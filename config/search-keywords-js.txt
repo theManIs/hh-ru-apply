@@ -1,0 +1,11 @@
+# По одному запросу на строку. Удалёнку harvest ставит фильтром hh, в запросе только текст.
+JavaScript
+TypeScript
+Vue.js
+Nuxt
+React
+Next.js
+Angular
+React Native
+Expo
+Unity

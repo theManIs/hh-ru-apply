@@ -502,32 +502,28 @@ function renderCard(item) {
   }
 
   const applyChatBtn = node.querySelector('.btn-apply-chat');
-  const approvedLetter =
-    cl?.status === 'approved' && String(cl?.approvedText || '').trim();
-  if (approvedLetter) {
-    applyChatBtn.disabled = false;
-    applyChatBtn.removeAttribute('title');
-    applyChatBtn.addEventListener('click', async () => {
-      applyChatBtn.disabled = true;
-      try {
-        const res = await api('/api/hh-launch-apply-chat', {
-          method: 'POST',
-          body: JSON.stringify({ id: item.id }),
-        });
-        const pid = res.pid != null ? ` PID ${res.pid}.` : '';
-        const logHint = res.logFile ? ` Лог: ${res.logFile}` : '';
-        showToast(
-          `Запущен Chromium (отдельный процесс).${pid}${logHint} Лог отклика открыт — обновляется каждые 2.5 с.`,
-          'neutral'
-        );
-        openApplyLogModal();
-      } catch (e) {
-        alert(e.message);
-      } finally {
-        applyChatBtn.disabled = false;
-      }
-    });
-  }
+  applyChatBtn.disabled = false;
+  applyChatBtn.removeAttribute('title');
+  applyChatBtn.addEventListener('click', async () => {
+    applyChatBtn.disabled = true;
+    try {
+      const res = await api('/api/hh-launch-apply-chat', {
+        method: 'POST',
+        body: JSON.stringify({ id: item.id }),
+      });
+      const pid = res.pid != null ? ` PID ${res.pid}.` : '';
+      const logHint = res.logFile ? ` Лог: ${res.logFile}` : '';
+      showToast(
+        `Запущен Chromium (отдельный процесс).${pid}${logHint} Лог отклика открыт — обновляется каждые 2.5 с.`,
+        'neutral'
+      );
+      openApplyLogModal();
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      applyChatBtn.disabled = false;
+    }
+  });
 
   const actions = node.querySelector('.actions');
   const doneReason = node.querySelector('.done-reason');

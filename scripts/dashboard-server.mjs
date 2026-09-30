@@ -416,12 +416,6 @@ const server = http.createServer(async (req, res) => {
 
     const rec = getVacancyRecord(id);
     if (!rec) return sendJson(res, 404, { error: 'Запись не найдена' });
-    const letter = String(rec.coverLetter?.approvedText || '').trim();
-    if (!letter) {
-      return sendJson(res, 400, {
-        error: 'Нет утверждённого письма — сначала утвердите текст в «Черновик письма»',
-      });
-    }
 
     const scriptPath = path.join(ROOT, 'scripts', 'hh-apply-chat-letter.mjs');
     if (!fs.existsSync(scriptPath)) {
@@ -447,7 +441,10 @@ const server = http.createServer(async (req, res) => {
     const logFd = fs.openSync(HH_APPLY_CHAT_LOG_FILE, 'a');
     let child;
     try {
-      child = spawn(process.execPath, [scriptPath, `--id=${id}`], {
+      child = spawn(
+        process.execPath,
+        [scriptPath, `--id=${id}`, '--skip-chat'],
+        {
         cwd: ROOT,
         detached: true,
         stdio: ['ignore', logFd, logFd],

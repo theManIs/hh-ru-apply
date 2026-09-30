@@ -19,6 +19,7 @@ loadEnv();
 import { sessionProfilePath } from '../lib/paths.mjs';
 import { getVacancyRecord } from '../lib/store.mjs';
 import { clickVacancyResponseButton, fillCoverLetterField } from '../lib/hh-response-selectors.mjs';
+import { withHhBrowserOptions } from '../lib/hh-browser.mjs';
 
 const headless = process.env.HH_HEADLESS === '1';
 const stayOpen = process.argv.includes('--stay-open');
@@ -98,11 +99,14 @@ async function main() {
 
   const { vacancyUrl, letterText } = resolveLetterAndUrl();
 
-  const ctx = await chromium.launchPersistentContext(profile, {
-    headless,
-    viewport: { width: 1280, height: 900 },
-    locale: 'ru-RU',
-  });
+  const ctx = await chromium.launchPersistentContext(
+    profile,
+    await withHhBrowserOptions({
+      headless,
+      viewport: { width: 1280, height: 900 },
+      locale: 'ru-RU',
+    })
+  );
   const page = ctx.pages()[0] || (await ctx.newPage());
 
   try {

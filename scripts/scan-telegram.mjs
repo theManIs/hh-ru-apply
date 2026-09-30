@@ -16,7 +16,9 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import 'dotenv/config';
+import { loadEnv } from '../lib/load-env.mjs';
+loadEnv();
+import { withHhBrowserOptions } from '../lib/hh-browser.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -135,11 +137,14 @@ async function main() {
     process.exit(1);
   }
 
-  const ctx = await chromium.launchPersistentContext(PERSISTENT_PROFILE, {
-    headless,
-    viewport: { width: 1280, height: 800 },
-    locale: 'ru-RU',
-  });
+  const ctx = await chromium.launchPersistentContext(
+    PERSISTENT_PROFILE,
+    await withHhBrowserOptions({
+      headless,
+      viewport: { width: 1280, height: 800 },
+      locale: 'ru-RU',
+    })
+  );
   const page = ctx.pages()[0] || (await ctx.newPage());
 
   try {

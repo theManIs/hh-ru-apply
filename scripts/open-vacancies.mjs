@@ -14,8 +14,10 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline';
-import 'dotenv/config';
+import { loadEnv } from '../lib/load-env.mjs';
+loadEnv();
 import { loadSearchKeywords } from '../lib/load-keywords.mjs';
+import { withHhBrowserOptions } from '../lib/hh-browser.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -114,11 +116,14 @@ async function main() {
     process.exit(1);
   }
 
-  const ctx = await chromium.launchPersistentContext(PERSISTENT_PROFILE, {
-    headless,
-    viewport: { width: 1280, height: 800 },
-    locale: 'ru-RU',
-  });
+  const ctx = await chromium.launchPersistentContext(
+    PERSISTENT_PROFILE,
+    await withHhBrowserOptions({
+      headless,
+      viewport: { width: 1280, height: 800 },
+      locale: 'ru-RU',
+    })
+  );
 
   const searchPage = ctx.pages()[0] || (await ctx.newPage());
 

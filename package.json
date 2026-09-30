@@ -12,11 +12,16 @@
     "dashboard": "node scripts/dashboard-server.mjs",
     "hh-fill-letter": "node scripts/hh-fill-response-letter.mjs",
     "hh-apply-chat": "node scripts/hh-apply-chat-letter.mjs",
-    "codegen-hh": "node scripts/codegen-hh.mjs"
+    "codegen-hh": "node scripts/codegen-hh.mjs",
+    "hourly": "node scripts/hourly-cycle.mjs",
+    "hourly:install": "node scripts/install-hourly-schedule.mjs",
+    "hourly:uninstall": "node scripts/install-hourly-schedule.mjs --uninstall"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
     "pdf-parse": "^2.4.5",
-    "playwright": "^1.49.0"
+    "playwright": "^1.49.0",
+    "proxy-chain": "^3.0.1",
+    "socks": "^2.8.10"
   }
 }
